@@ -16,7 +16,7 @@
 import tensorflow as tf
 import tensorflowvisu
 import math
-from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
+from notmnist import read_data_sets
 tf.set_random_seed(0)
 
 # neural network with 5 layers
@@ -33,8 +33,8 @@ tf.set_random_seed(0)
 #      \x/               -- fully connected layer (softmax)      W5 [30, 10]        B5[10]
 #       ·                                                        Y5 [batch, 10]
 
-# Download images and labels into mnist.test (10K images+labels) and mnist.train (60K images+labels)
-mnist = read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
+# Load images and labels from the pickle file
+notmnist = read_data_sets()
 
 # input X: 28x28 grayscale images, the first dimension (None) will index the images in the mini-batch
 X = tf.placeholder(tf.float32, [None, 28, 28, 1])
@@ -46,10 +46,10 @@ lr = tf.placeholder(tf.float32)
 pkeep = tf.placeholder(tf.float32)
 
 # five layers and their number of neurons (tha last layer has 10 softmax neurons)
-L = 200
-M = 100
-N = 60
-O = 30
+L = 2048
+M = 1024
+N = 512
+O = 256
 # Weights initialised with small random values between -0.2 and +0.2
 # When using RELUs, make sure biases are initialised with small *positive* values for example 0.1 = tf.ones([K])/10
 W1 = tf.Variable(tf.truncated_normal([784, L], stddev=0.1))  # 784 = 28 * 28
@@ -111,7 +111,7 @@ sess.run(init)
 def training_step(i, update_test_data, update_train_data):
 
     # training on batches of 100 images with 100 labels
-    batch_X, batch_Y = mnist.train.next_batch(100)
+    batch_X, batch_Y = notmnist.train.next_batch(100)
 
     # learning rate decay
     max_learning_rate = 0.003
@@ -129,8 +129,8 @@ def training_step(i, update_test_data, update_train_data):
 
     # compute test values for visualisation
     if update_test_data:
-        a, c, im = sess.run([accuracy, cross_entropy, It], {X: mnist.test.images, Y_: mnist.test.labels, pkeep: 1.0})
-        print(str(i) + ": ********* epoch " + str(i*100//mnist.train.images.shape[0]+1) + " ********* test accuracy:" + str(a) + " test loss: " + str(c))
+        a, c, im = sess.run([accuracy, cross_entropy, It], {X: notmnist.test.images, Y_: notmnist.test.labels, pkeep: 1.0})
+        print(str(i) + ": ********* epoch " + str(i * 100 // notmnist.train.images.shape[0] + 1) + " ********* test accuracy:" + str(a) + " test loss: " + str(c))
         datavis.append_test_curves_data(i, a, c)
         datavis.update_image2(im)
 

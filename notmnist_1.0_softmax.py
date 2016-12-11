@@ -36,8 +36,7 @@ tf.set_random_seed(0)
 #              softmax(line) applies an exp to each value then divides by the norm of the resulting line
 #              Y: output matrix with 100 lines and 10 columns
 
-# Download images and labels into mnist.test (10K images+labels) and mnist.train (60K images+labels)
-#mnist = read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
+# Load images and labels from the pickle file
 notmnist = read_data_sets()
 
 # input X: 28x28 grayscale images, the first dimension (None) will index the images in the mini-batch

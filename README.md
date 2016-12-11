@@ -1,4 +1,4 @@
-Fork of the excellent [Tensorflow MNIST tutorial](https://github.com/martin-gorner/tensorflow-mnist-tutorial) where support for [Udacity's notMNIST](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/udacity)
+Fork of the excellent [Tensorflow MNIST tutorial](https://github.com/martin-gorner/tensorflow-mnist-tutorial) where support for [Udacity's notMNIST](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/udacity) was added.
 
 Just place your notMNIST pickle file available under data/notMNIST.pickle and run one of the notmnist_*.*.py files.
 

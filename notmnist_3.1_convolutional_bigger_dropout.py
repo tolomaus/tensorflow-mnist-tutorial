@@ -16,11 +16,11 @@
 import tensorflow as tf
 import tensorflowvisu
 import math
-from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
+from notmnist import read_data_sets
 tf.set_random_seed(0)
 
-# Download images and labels into mnist.test (10K images+labels) and mnist.train (60K images+labels)
-mnist = read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
+# Load images and labels from the pickle file
+notmnist = read_data_sets()
 
 # neural network structure for this sample:
 #
@@ -110,7 +110,7 @@ sess.run(init)
 def training_step(i, update_test_data, update_train_data):
 
     # training on batches of 100 images with 100 labels
-    batch_X, batch_Y = mnist.train.next_batch(100)
+    batch_X, batch_Y = notmnist.train.next_batch(100)
 
     # learning rate decay
     max_learning_rate = 0.003
@@ -128,8 +128,8 @@ def training_step(i, update_test_data, update_train_data):
 
     # compute test values for visualisation
     if update_test_data:
-        a, c, im = sess.run([accuracy, cross_entropy, It], {X: mnist.test.images, Y_: mnist.test.labels, pkeep: 1.0})
-        print(str(i) + ": ********* epoch " + str(i*100//mnist.train.images.shape[0]+1) + " ********* test accuracy:" + str(a) + " test loss: " + str(c))
+        a, c, im = sess.run([accuracy, cross_entropy, It], {X: notmnist.test.images, Y_: notmnist.test.labels, pkeep: 1.0})
+        print(str(i) + ": ********* epoch " + str(i * 100 // notmnist.train.images.shape[0] + 1) + " ********* test accuracy:" + str(a) + " test loss: " + str(c))
         datavis.append_test_curves_data(i, a, c)
         datavis.update_image2(im)
 
@@ -156,5 +156,3 @@ print("max test accuracy: " + str(datavis.get_max_test_accuracy()))
 # layers 6 12 24 200, patches 6x6str1 5x5str2 4x4str2 no dropout best 0.9906 after 3100 iterations (avove 0.99 from iteration 1400)
 #*layers 6 12 24 200, patches 6x6str1 5x5str2 4x4str2 dropout=0.75 best 0.9928 after 12800 iterations (but consistently above 0.99 after 1300 iterations only, 0.9916 at 2300 iterations, 0.9921 at 5600, 0.9925 at 20000)
 #*same with dacaying learning rate 0.003-0.0001-2000: best 0.9931 (on other runs max accuracy 0.9921, 0.9927, 0.9935, 0.9929, 0.9933)
-
-tf.nn.max_pool()
